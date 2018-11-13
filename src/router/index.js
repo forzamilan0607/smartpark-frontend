@@ -36,7 +36,8 @@ const mainRoutes = {
     { path: '/home', component: _import('common/home'), name: 'home', meta: { title: '首页' } },
     { path: '/theme', component: _import('common/theme'), name: 'theme', meta: { title: '主题' } },
     { path: '/demo-echarts', component: _import('demo/echarts'), name: 'demo-echarts', meta: { title: 'demo-echarts', isTab: true } },
-    { path: '/demo-ueditor', component: _import('demo/ueditor'), name: 'demo-ueditor', meta: { title: 'demo-ueditor', isTab: true } }
+    { path: '/demo-ueditor', component: _import('demo/ueditor'), name: 'demo-ueditor', meta: { title: 'demo-ueditor', isTab: true } },
+    { path: '/modules-sys/sysuser', component: _import('modules/sys/user'), name: 'sys-user', meta: { title: '用户管理', isTab: true } }
   ],
   beforeEnter (to, from, next) {
     let token = Vue.cookie.get('token')
@@ -68,9 +69,10 @@ router.beforeEach((to, from, next) => {
       params: http.adornParams()
     }).then(({data}) => {
       if (data && data.code === 200) {
-        fnAddDynamicMenuRoutes(data.menuList)
+        let $menuList = data.menuList.filter(item => item.source === 1);
+        fnAddDynamicMenuRoutes($menuList);
         router.options.isAddDynamicMenuRoutes = true
-        sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'))
+        sessionStorage.setItem('menuList', JSON.stringify($menuList || '[]'))
         sessionStorage.setItem('permissions', JSON.stringify(data.permissions || '[]'))
         next({ ...to, replace: true })
       } else {
