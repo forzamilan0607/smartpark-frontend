@@ -1,13 +1,13 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+      <el-form-item width="300">
+        <el-input v-model="dataForm.key" placeholder="参数名" clearable ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <!--<el-button v-if="isAuth('busi:batchreservation:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
-        <el-button v-if="isAuth('busi:batchreservation:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <!--<el-button v-if="isAuth('base:tbuser:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
+        <!--<el-button v-if="isAuth('base:tbuser:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
     <el-table
@@ -23,100 +23,36 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="id"
+        prop="userId"
         header-align="center"
         align="center"
-        label="订单id">
+        width="60"
+        label="ID">
       </el-table-column>
       <el-table-column
-        prop="phone"
+        prop="username"
         header-align="center"
         align="center"
-        label="访客手机号">
+        label="用户名">
       </el-table-column>
       <el-table-column
-        prop="photoUrl"
+        prop="mobile"
         header-align="center"
         align="center"
-        label="访客照片">
+        label="手机号">
       </el-table-column>
-      <el-table-column
-        prop="visitorId"
+      <!--<el-table-column
+        prop="password"
         header-align="center"
         align="center"
-        label="访客id">
-      </el-table-column>
+        label="密码">
+      </el-table-column>-->
       <el-table-column
-        prop="staffId"
+        prop="openId"
         header-align="center"
         align="center"
-        label="受访者id">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        header-align="center"
-        align="center"
-        label="订单状态">
-      </el-table-column>
-      <el-table-column
-        prop="appointStartTime"
-        header-align="center"
-        align="center"
-        label="预约开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="appointEndTime"
-        header-align="center"
-        align="center"
-        label="预约结束时间">
-      </el-table-column>
-      <el-table-column
-        prop="actStartTime"
-        header-align="center"
-        align="center"
-        label="实际开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="actEndTime"
-        header-align="center"
-        align="center"
-        label="实际结束时间">
-      </el-table-column>
-      <el-table-column
-        prop="type"
-        header-align="center"
-        align="center"
-        label="预约单类型  1  在线预约    2 线下预约  默认1  ">
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        header-align="center"
-        align="center"
-        label="备注(来访目的)">
-      </el-table-column>
-      <el-table-column
-        prop="companions"
-        header-align="center"
-        align="center"
-        label="同行人数">
-      </el-table-column>
-      <el-table-column
-        prop="ext1"
-        header-align="center"
-        align="center"
-        label="扩展字段1">
-      </el-table-column>
-      <el-table-column
-        prop="ext2"
-        header-align="center"
-        align="center"
-        label="扩展字段2">
-      </el-table-column>
-      <el-table-column
-        prop="ext3"
-        header-align="center"
-        align="center"
-        label="扩展字段3">
+        width="150"
+        label="微信openid">
       </el-table-column>
       <el-table-column
         prop="createTime"
@@ -125,38 +61,22 @@
         label="创建时间">
       </el-table-column>
       <el-table-column
-        prop="createUserId"
+        prop="roleName"
         header-align="center"
         align="center"
-        label="创建人id">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        header-align="center"
-        align="center"
-        label="更新时间">
-      </el-table-column>
-      <el-table-column
-        prop="updateUserId"
-        header-align="center"
-        align="center"
-        label="更新人id">
-      </el-table-column>
-      <el-table-column
-        prop="physicalCardId"
-        header-align="center"
-        align="center"
-        label="访客物理卡id">
+        label="角色名称">
       </el-table-column>
       <el-table-column
         fixed="right"
         header-align="center"
         align="center"
-        width="150"
+        width="230"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
+          <!--<el-button type="text" size="small"  @click="deleteHandle(scope.row.userId)">删除</el-button>-->
+          <el-button type="text" size="small" v-if="scope.row.roleId == 3 || scope.row.roleId == 1" @click="setRole(scope.row, 2)">设为员工</el-button>
+          <el-button type="text" size="small" v-if="scope.row.roleId == 2" @click="setRole(scope.row, 3)">设为管理员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -175,7 +95,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './visitorreservation-add-or-update'
+  import AddOrUpdate from './tbuser-add-or-update'
   export default {
     data () {
       return {
@@ -202,9 +122,9 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/busi/visitorreservation/list'),
-          method: 'get',
-          params: this.$http.adornParams({
+          url: this.$http.adornUrl('/base/tbuser/list'),
+          method: 'post',
+          data: this.$http.adornData({
             'page': this.pageIndex,
             'limit': this.pageSize,
             'key': this.dataForm.key
@@ -242,10 +162,40 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
+      setRole (user, roleId) {
+        let targetUser = {
+          userId: user.userId,
+          username: user.username,
+          mobile: user.mobile,
+          password: user.password,
+          openId: user.openId,
+          createTime: user.createTime,
+          roleId: roleId
+        }
+        this.$http({
+          url: this.$http.adornUrl('/base/tbuser/setRole'),
+          method: 'post',
+          data: this.$http.adornData(targetUser)
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            user.roleId = roleId;
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+      },
       // 删除
       deleteHandle (id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
-          return item.id
+          return item.userId
         })
         this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
@@ -253,7 +203,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/busi/visitorreservation/delete'),
+            url: this.$http.adornUrl('/base/tbuser/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

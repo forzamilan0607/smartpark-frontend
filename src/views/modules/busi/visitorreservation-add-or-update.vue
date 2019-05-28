@@ -176,7 +176,7 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.dataForm.phone = data.visitorreservation.phone
                 this.dataForm.photoUrl = data.visitorreservation.photoUrl
                 this.dataForm.visitorId = data.visitorreservation.visitorId
@@ -233,7 +233,7 @@
                 'physicalCardId': this.dataForm.physicalCardId
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',
