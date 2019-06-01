@@ -28,3 +28,13 @@
 ## Cannot find module 'opn' 解决办法
 删除 node_modules 目录，重新安装—— cnpm install
 
+## 打包发布
+### 构建生成的资源文件保存在/dist目录下，可通过config/index.js目录文件修改相关配置信息
+- 构建生产环境(默认) —— **npm run build**
+
+- 构建测试环境 —— **npm run build --qa**
+
+- 构建验收环境 —— **npm run build --uat**
+
+- 构建生产环境 —— **npm run build --prod**
+
