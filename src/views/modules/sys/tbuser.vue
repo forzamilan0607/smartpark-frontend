@@ -1,8 +1,8 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item width="300">
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable ></el-input>
+      <el-form-item >
+        <el-input v-model="dataForm.keyword" placeholder="用户名、手机号、角色名称查询" style="width:300px;" clearable ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -100,7 +100,7 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          keyword: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -127,7 +127,7 @@
           data: this.$http.adornData({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'keyword': this.dataForm.keyword
           })
         }).then(({data}) => {
           if (data && data.code === 200) {

@@ -2,7 +2,13 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.keyword" placeholder="访客姓名手机号身份证号、员工姓名手机号" clearable style="width:300px;"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.status" clearable placeholder="请选择">
+          <el-option v-for="item in statusList" :key="item.value" :label="item.name" :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -98,7 +104,7 @@
         align="center"
         label="员工手机号">
       </el-table-column>
-      <el-table-column
+      <!--<el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -107,7 +113,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -128,8 +134,10 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          keyword: '',
+          status: ''
         },
+        statusList: [],
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -143,6 +151,7 @@
     },
     activated () {
       this.getDataList()
+      this.getStatusList()
     },
     methods: {
       // 获取数据列表
@@ -154,7 +163,8 @@
           data: this.$http.adornData({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'keyword': this.dataForm.key
+            'keyword': this.dataForm.keyword ? this.dataForm.keyword : null,
+            'status': this.dataForm.status ? this.dataForm.status : null
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
@@ -163,6 +173,24 @@
           } else {
             this.dataList = []
             this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      getStatusList () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('/sys/datadict/queryByType.notoken'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'type': 'RESERVATION_STATUS'
+          })
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            if (data.list && data.list.length) {
+              data.list.sort((a,b) => a.sortOrder - b.sortOrder)
+              this.statusList = data.list
+            }
           }
           this.dataListLoading = false
         })
